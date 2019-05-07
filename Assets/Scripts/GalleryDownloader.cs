@@ -2,54 +2,66 @@ using System;
 using System.Collections.Generic;
 using Constants;
 using Service;
+using Service.Model;
 using Service.Response;
 using UnityEngine;
 
-public class GalleryDownloader : MonoBehaviour, IFlickrCallback
+internal class GalleryDownloader : MonoBehaviour, IFlickrCallback
 {
     [SerializeField] [Range(1, 100)] [Tooltip(Tooltips.PerPage)]
     private int perPage = 10;
+    
+    public delegate void DownloadFinished(Dictionary<string, PhotoViewModel> photos);
+
+    public static event DownloadFinished OnDownloadFinished;
 
     private FlickrClient client;
-    public List<string> Urls { get; private set; }
+    private Dictionary<string, PhotoViewModel> photos;
 
-    private void Start()
+    private void Awake()
     {
-        Urls = new List<string>();
+        photos = new Dictionary<string, PhotoViewModel>();
         client = new FlickrClient(this);
-    }
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.Mouse0))
-            Debug.Log(Urls.Count);
-    }
-
-    public void GetRecentPhotos(int pageNum)
-    {
-        client.GetRecentPhotos(perPage, pageNum);
-    }
-
-    public void GetPhotoInfo(string photoId)
-    {
-        client.GetPhotoInfo(photoId);
     }
 
     public void OnRecentSuccess(RecentPhotosResponse response)
     {
-        var photos = response.RecentPhotos.PhotoList;
-        foreach (var photo in photos)
-            client.GetPhotoInfo(photo.Id);
+        var photoList = response.RecentPhotos.PhotoList;
+        foreach (var photo in photoList)
+            photos.Add(photo.Id, new PhotoViewModel(photo));
+        foreach (var photoViewModel in photos) 
+            GetPhotoInfo(photoViewModel.Key);
     }
 
     public void OnInfoSuccess(PhotoInfoResponse response)
     {
-        foreach (var photoUrl in response.PhotoInfo.Urls.PhotoUrl)
-            Urls.Add(photoUrl.Url);
+        if (!photos.TryGetValue(response.PhotoInfo.Id, out var photoViewModel))
+        {
+            Debug.LogError($"Couldn't find photo of ID {response.PhotoInfo.Id}");
+            return;
+        }
+
+        photoViewModel.OriginalFormat = response.PhotoInfo.OriginalFormat;
+        var urls = response.PhotoInfo.Urls.PhotoUrl;
+        foreach (var url in urls) 
+            photoViewModel.Urls.Add(url.Url);
+        
+        if (photos.Count >= perPage)
+            OnDownloadFinished?.Invoke(photos);
     }
 
     public void OnFailure(Exception e)
     {
         Debug.LogError(e);
+    }
+    
+    public void GetRecentPhotos(int pageNumber)
+    {
+        client.GetRecentPhotos(perPage, pageNumber);
+    }
+    
+    private void GetPhotoInfo(string photoId)
+    {
+        client.GetPhotoInfo(photoId);
     }
 }

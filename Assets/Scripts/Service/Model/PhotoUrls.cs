@@ -6,7 +6,7 @@ namespace Service.Model
     public class PhotoUrls
     {
         [JsonProperty(PropertyName = "url")]
-        public List<PhotoUrl> PhotoUrl { get; set; }
+        public IEnumerable<PhotoUrl> PhotoUrl { get; set; }
 
         public override string ToString()
         {

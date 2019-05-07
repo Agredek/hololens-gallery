@@ -1,10 +1,10 @@
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Constants;
 using Retrofit.Methods;
 using Retrofit.Parameters;
 using Service.Response;
 using UniRx;
-
 namespace Service
 {
     public interface IFlickrService

@@ -4,9 +4,9 @@ namespace Service.Model
 {
     public class RecentPhoto : BasePhoto
     {
-        [JsonProperty(PropertyName = "owner")] public string Owner { get; set; }
+        [JsonProperty(PropertyName = "owner")] internal string Owner { get; set; }
 
-        [JsonProperty(PropertyName = "title")] public string Title { get; set; }
+        [JsonProperty(PropertyName = "title")] internal string Title { get; set; }
 
         [JsonProperty(PropertyName = "ispublic")]
         public bool IsPublic { get; set; }

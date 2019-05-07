@@ -18,6 +18,6 @@ namespace Service.Model
         public int Total { get; set; }
         
         [JsonProperty(PropertyName = "photo")]
-        public List<RecentPhoto> PhotoList { get; set; }
+        public IEnumerable<RecentPhoto> PhotoList { get; set; }
     }
 }

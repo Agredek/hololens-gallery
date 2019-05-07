@@ -1,17 +1,25 @@
+using System.Collections.Generic;
 using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    public class PhotoViewModel : BasePhoto
+    internal class PhotoViewModel : BasePhoto
     {
-        public PhotoViewModel(string id, string secret, string server, int farm, string originalFormat) : base(id,
-            secret, server, farm)
+        internal PhotoViewModel(RecentPhoto photo) : base(photo)
         {
-            OriginalFormat = originalFormat;
+            Owner = photo.Owner;
+            Title = photo.Title;
+            Urls = new List<string>();
         }
 
         [JsonProperty(PropertyName = "originalformat")]
-        public string OriginalFormat { get; set; }
+        internal string OriginalFormat { get; set; }
+
+        [JsonProperty(PropertyName = "owner")] internal string Owner { get; set; }
+
+        [JsonProperty(PropertyName = "title")] internal string Title { get; set; }
+
+        [JsonProperty(PropertyName = "urls")] internal List<string> Urls { get; set; }
 
         public string SourceUrl()
         {

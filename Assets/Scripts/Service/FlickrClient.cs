@@ -1,16 +1,15 @@
-using System;
 using Constants;
 using Retrofit;
 using UniRx;
 
 namespace Service
 {
-    public class FlickrClient
+    internal class FlickrClient
     {
         private readonly IFlickrService service;
         private readonly IFlickrCallback callback;
 
-        public FlickrClient(IFlickrCallback callback)
+        internal FlickrClient(IFlickrCallback callback)
         {
             this.callback = callback;
             var adapter = new RetrofitAdapter.Builder()
@@ -20,7 +19,12 @@ namespace Service
             service = adapter.Create<IFlickrService>();
         }
 
-        public void GetRecentPhotos(int perPage, int pageNumber)
+        /// <summary>
+        ///     Download collection of recently uploaded photos.
+        /// </summary>
+        /// <param name="perPage">How many photos should one page contain.</param>
+        /// <param name="pageNumber">Page number.</param>
+        internal void GetRecentPhotos(int perPage, int pageNumber)
         {
             service.GetRecent(HttpConstants.Recent, perPage, pageNumber, HttpConstants.QueryOptions)
                 .SubscribeOn(Scheduler.ThreadPool)
@@ -31,7 +35,11 @@ namespace Service
                 );
         }
 
-        public void GetPhotoInfo(string photoId)
+        /// <summary>
+        ///     Download detailed info about one picture.
+        /// </summary>
+        /// <param name="photoId">ID of photo to download.</param>
+        internal void GetPhotoInfo(string photoId)
         {
             service.GetInfo(HttpConstants.PhotoInfo, photoId, HttpConstants.QueryOptions)
                 .SubscribeOn(Scheduler.ThreadPool)

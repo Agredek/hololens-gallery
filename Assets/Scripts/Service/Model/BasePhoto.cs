@@ -4,6 +4,14 @@ namespace Service.Model
 {
     public abstract class BasePhoto
     {
+        protected BasePhoto(BasePhoto other)
+        {
+            Id = other.Id;
+            Secret = other.Secret;
+            Server = other.Server;
+            Farm = other.Farm;
+        }
+        
         protected BasePhoto()
         {
         }
