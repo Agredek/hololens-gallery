@@ -3,13 +3,14 @@ using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    internal class PhotoViewModel : BasePhoto
+    internal class FlickrPhotoViewModel : BaseFlickrPhoto
     {
-        internal PhotoViewModel(RecentPhoto photo) : base(photo)
+        internal FlickrPhotoViewModel(RecentFlickrPhoto flickrPhoto) : base(flickrPhoto)
         {
-            Owner = photo.Owner;
-            Title = photo.Title;
+            Owner = flickrPhoto.Owner;
+            Title = flickrPhoto.Title;
             Urls = new List<string>();
+            OriginalFormat = "jpg";
         }
 
         [JsonProperty(PropertyName = "originalformat")]

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    public class RecentPhotos
+    public class RecentFlickrPhotos
     {
         [JsonProperty(PropertyName = "page")]
         public int Page { get; set; }
@@ -18,6 +18,6 @@ namespace Service.Model
         public int Total { get; set; }
         
         [JsonProperty(PropertyName = "photo")]
-        public IEnumerable<RecentPhoto> PhotoList { get; set; }
+        public IEnumerable<RecentFlickrPhoto> PhotoList { get; set; }
     }
 }

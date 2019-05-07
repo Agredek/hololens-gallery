@@ -1,10 +1,12 @@
 using System.Collections.Generic;
-using Service.Model;
 using UnityEngine;
 
+[RequireComponent(typeof(GalleryDownloader))]
 internal class Gallery : MonoBehaviour
 {
     [SerializeField] private GalleryDownloader downloader;
+    [SerializeField] private GameObject contentContainer;
+    [SerializeField] private Photo photoPrefab;
 
     private void Start()
     {
@@ -21,10 +23,13 @@ internal class Gallery : MonoBehaviour
         GalleryDownloader.OnDownloadFinished -= OnDownloadFinished;
     }
 
-    private void OnDownloadFinished(Dictionary<string, PhotoViewModel> photos)
+    private void OnDownloadFinished(List<Texture2D> photos)
     {
         Debug.Log($"Successfully downloaded {photos.Count} photos!");
-        foreach (var photoViewModel in photos.Values) 
-            Debug.Log(photoViewModel.SourceUrl());
+        foreach (var texture in photos)
+        {
+            var photoInstance = Instantiate(photoPrefab, contentContainer.transform);
+            photoInstance.SetPhoto(texture);
+        }
     }
 }

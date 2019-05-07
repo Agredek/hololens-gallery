@@ -220,7 +220,9 @@ namespace Microsoft.MixedReality.Toolkit.Input
             }
             else
             {
-                this.GetComponent<Renderer>().material.mainTexture.wrapMode = TextureWrapMode.Repeat;
+                var materialMainTexture = GetComponent<Renderer>().material.mainTexture;
+                if (materialMainTexture != null)
+                    materialMainTexture.wrapMode = TextureWrapMode.Repeat;
             }
 
             //get event targets

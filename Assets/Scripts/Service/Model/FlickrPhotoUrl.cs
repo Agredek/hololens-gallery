@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    public class PhotoUrl
+    public class FlickrPhotoUrl
     {
         [JsonProperty(PropertyName = "type")]
         public string Type { get; set; }

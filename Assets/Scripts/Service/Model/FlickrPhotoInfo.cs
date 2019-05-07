@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    public class PhotoInfo : BasePhoto
+    public class FlickrPhotoInfo : BaseFlickrPhoto
     {
         [JsonProperty(PropertyName = "dateuploaded")]
         public long DateUploaded { get; set; }
@@ -13,7 +13,7 @@ namespace Service.Model
         [JsonProperty(PropertyName = "originalformat")]
         public string OriginalFormat { get; set; }
 
-        [JsonProperty(PropertyName = "urls")] public PhotoUrls Urls { get; set; }
+        [JsonProperty(PropertyName = "urls")] public FlickrPhotoUrls Urls { get; set; }
 
         [JsonProperty(PropertyName = "media")] public string Media { get; set; }
     }

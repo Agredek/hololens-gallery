@@ -3,10 +3,10 @@ using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    public class PhotoUrls
+    public class FlickrPhotoUrls
     {
         [JsonProperty(PropertyName = "url")]
-        public IEnumerable<PhotoUrl> PhotoUrl { get; set; }
+        public IEnumerable<FlickrPhotoUrl> PhotoUrl { get; set; }
 
         public override string ToString()
         {

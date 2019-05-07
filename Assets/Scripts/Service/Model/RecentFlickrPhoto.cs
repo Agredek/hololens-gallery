@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    public class RecentPhoto : BasePhoto
+    public class RecentFlickrPhoto : BaseFlickrPhoto
     {
         [JsonProperty(PropertyName = "owner")] internal string Owner { get; set; }
 

@@ -1,67 +1,102 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Constants;
 using Service;
 using Service.Model;
 using Service.Response;
 using UnityEngine;
+using UnityEngine.Networking;
 
 internal class GalleryDownloader : MonoBehaviour, IFlickrCallback
 {
     [SerializeField] [Range(1, 100)] [Tooltip(Tooltips.PerPage)]
     private int perPage = 10;
-    
-    public delegate void DownloadFinished(Dictionary<string, PhotoViewModel> photos);
+
+    public delegate void DownloadFinished(List<Texture2D> photos);
 
     public static event DownloadFinished OnDownloadFinished;
 
+    private bool hasInvoked;
+
     private FlickrClient client;
-    private Dictionary<string, PhotoViewModel> photos;
+    private Dictionary<string, FlickrPhotoViewModel> flickrPhotoViewModels;
+    private List<Texture2D> photos;
 
     private void Awake()
     {
-        photos = new Dictionary<string, PhotoViewModel>();
+        flickrPhotoViewModels = new Dictionary<string, FlickrPhotoViewModel>();
+        photos = new List<Texture2D>();
         client = new FlickrClient(this);
+    }
+
+    private void Update()
+    {
+        if (photos.Count < perPage || hasInvoked) 
+            return;
+        hasInvoked = true;
+        OnDownloadFinished?.Invoke(photos);
     }
 
     public void OnRecentSuccess(RecentPhotosResponse response)
     {
-        var photoList = response.RecentPhotos.PhotoList;
+        var photoList = response.RecentFlickrPhotos.PhotoList;
         foreach (var photo in photoList)
-            photos.Add(photo.Id, new PhotoViewModel(photo));
-        foreach (var photoViewModel in photos) 
+            flickrPhotoViewModels.Add(photo.Id, new FlickrPhotoViewModel(photo));
+        foreach (var photoViewModel in flickrPhotoViewModels)
             GetPhotoInfo(photoViewModel.Key);
     }
 
     public void OnInfoSuccess(PhotoInfoResponse response)
     {
-        if (!photos.TryGetValue(response.PhotoInfo.Id, out var photoViewModel))
+        var photoInfo = response.FlickrPhotoInfo;
+        if (!flickrPhotoViewModels.TryGetValue(photoInfo.Id, out var photoViewModel))
         {
-            Debug.LogError($"Couldn't find photo of ID {response.PhotoInfo.Id}");
+            Debug.LogError($"Couldn't find photo of ID {photoInfo.Id}");
             return;
         }
 
-        photoViewModel.OriginalFormat = response.PhotoInfo.OriginalFormat;
-        var urls = response.PhotoInfo.Urls.PhotoUrl;
-        foreach (var url in urls) 
+        if (photoInfo.OriginalFormat != null)
+            photoViewModel.OriginalFormat = photoInfo.OriginalFormat;
+
+        var urls = photoInfo.Urls.PhotoUrl;
+        foreach (var url in urls)
             photoViewModel.Urls.Add(url.Url);
-        
-        if (photos.Count >= perPage)
-            OnDownloadFinished?.Invoke(photos);
+
+        if (flickrPhotoViewModels.Count < perPage)
+            return;
+        foreach (var photo in flickrPhotoViewModels.Values)
+            StartCoroutine(DownloadPhoto(photo.SourceUrl()));
     }
 
     public void OnFailure(Exception e)
     {
         Debug.LogError(e);
     }
-    
+
     public void GetRecentPhotos(int pageNumber)
     {
         client.GetRecentPhotos(perPage, pageNumber);
     }
-    
+
     private void GetPhotoInfo(string photoId)
     {
         client.GetPhotoInfo(photoId);
+    }
+
+    private IEnumerator DownloadPhoto(string url)
+    {
+        var www = UnityWebRequestTexture.GetTexture(url);
+        yield return www.SendWebRequest();
+        if (www.isNetworkError || www.isHttpError)
+        {
+            Debug.LogError(www.error);
+            Debug.LogError($"Exception occurred while downloading photo from {url}");
+        }
+        else
+        {
+            var photo = ((DownloadHandlerTexture) www.downloadHandler).texture;
+            photos.Add(photo);
+        }
     }
 }

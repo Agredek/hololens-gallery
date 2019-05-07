@@ -2,9 +2,9 @@ using Newtonsoft.Json;
 
 namespace Service.Model
 {
-    public abstract class BasePhoto
+    public abstract class BaseFlickrPhoto
     {
-        protected BasePhoto(BasePhoto other)
+        protected BaseFlickrPhoto(BaseFlickrPhoto other)
         {
             Id = other.Id;
             Secret = other.Secret;
@@ -12,11 +12,11 @@ namespace Service.Model
             Farm = other.Farm;
         }
         
-        protected BasePhoto()
+        protected BaseFlickrPhoto()
         {
         }
 
-        protected BasePhoto(string id, string secret, string server, int farm)
+        protected BaseFlickrPhoto(string id, string secret, string server, int farm)
         {
             Id = id;
             Secret = secret;
