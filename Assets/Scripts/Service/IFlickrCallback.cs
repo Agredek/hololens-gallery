@@ -6,7 +6,7 @@ namespace Service
     public interface IFlickrCallback
     {
         void OnRecentSuccess(RecentPhotosResponse response);
-        void OnInfoSuccess(string response);
+        void OnInfoSuccess(PhotoInfoResponse response);
         void OnFailure(Exception e);
     }
 }

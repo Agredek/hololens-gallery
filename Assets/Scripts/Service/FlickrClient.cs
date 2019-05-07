@@ -15,7 +15,6 @@ namespace Service
             this.callback = callback;
             var adapter = new RetrofitAdapter.Builder()
                 .SetEndpoint(HttpConstants.Endpoint)
-                .EnableLog(true)
                 .SetErrorHandler(new DefaultErrorHandler())
                 .Build();
             service = adapter.Create<IFlickrService>();

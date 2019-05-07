@@ -17,7 +17,7 @@ namespace Service
             [QueryMap] Dictionary<string, string> options);
 
         [Get("")]
-        IObservable<string> GetInfo(
+        IObservable<PhotoInfoResponse> GetInfo(
             [Query(HttpConstants.Method)] string method,
             [Query(HttpConstants.PhotoId)] string photoId,
             [QueryMap] Dictionary<string, string> options);
