@@ -8,21 +8,31 @@ public class LoadingBar : MonoBehaviour
     [SerializeField] [Range(1f, 500f)] [Tooltip(Tooltips.RotationSpeed)]
     private float rotateSpeed = 200f;
 
+    [SerializeField] private SpriteRenderer spriteRenderer;
+
     private void Update()
     {
-        transform.Rotate(0f, 0f, rotateSpeed * Time.deltaTime);
+        if (spriteRenderer.isVisible)
+            transform.Rotate(0f, 0f, rotateSpeed * Time.deltaTime);
     }
 
     private void OnEnable()
     {
+        GalleryDownloader.OnDownloadStarted += OnDownloadStarted;
         GalleryDownloader.OnDownloadFinished += OnDownloadFinished;
         GalleryDownloader.OnDownloadFailed += OnDownloadFailed;
     }
 
     private void OnDisable()
     {
+        GalleryDownloader.OnDownloadStarted -= OnDownloadStarted;
         GalleryDownloader.OnDownloadFinished -= OnDownloadFinished;
         GalleryDownloader.OnDownloadFailed -= OnDownloadFailed;
+    }
+    
+    private void OnDownloadStarted()
+    {
+        spriteRenderer.enabled = true;
     }
 
     private void OnDownloadFinished(List<Texture2D> photos)
@@ -37,6 +47,6 @@ public class LoadingBar : MonoBehaviour
 
     private void Disable()
     {
-        gameObject.SetActive(false);
+        spriteRenderer.enabled = false;
     }
 }

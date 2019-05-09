@@ -9,6 +9,8 @@ using Utils;
 
 internal class GalleryDownloader : IFlickrCallback
 {
+    public delegate void DownloadStarted();
+
     public delegate void DownloadFailed(Exception e);
 
     public delegate void DownloadFinished(List<Texture2D> photos);
@@ -18,7 +20,7 @@ internal class GalleryDownloader : IFlickrCallback
     private readonly int perPage;
     private readonly List<Texture2D> photos;
 
-    private int pages;
+    private int pageCount;
 
     public GalleryDownloader(int perPage)
     {
@@ -29,17 +31,23 @@ internal class GalleryDownloader : IFlickrCallback
 
     public void OnSuccess(RecentPhotosResponse response)
     {
-        pages = response.RecentFlickrPhotos.Pages;
-        
+        pageCount = response.RecentFlickrPhotos.PageCount;
+        photos.Clear();
+
         var photoList = response.RecentFlickrPhotos.PhotoList;
         foreach (var photo in photoList)
-            DownloadPhoto(FlickrUtil.GetPhotoUrl(photo));
+        {
+            var photoUrl = FlickrUtil.GetPhotoUrl(photo);
+            DownloadPhoto(photoUrl);
+        }
     }
 
     public void OnFailure(Exception e)
     {
         OnDownloadFailed?.Invoke(e);
     }
+
+    public static event DownloadStarted OnDownloadStarted;
 
     public static event DownloadFinished OnDownloadFinished;
 
@@ -51,8 +59,9 @@ internal class GalleryDownloader : IFlickrCallback
     /// <param name="pageNumber"></param>
     public bool GetRecentPhotos(int pageNumber)
     {
-        if (pageNumber > pages)
+        if (pageNumber > pageCount)
             return false;
+        OnDownloadStarted?.Invoke();
         client.GetRecentPhotos(perPage, pageNumber);
         return true;
     }
@@ -62,10 +71,14 @@ internal class GalleryDownloader : IFlickrCallback
         var www = UnityWebRequestTexture.GetTexture(url);
         www.SendWebRequest()
             .AsAsyncOperationObservable()
+            .SubscribeOn(Scheduler.ThreadPool)
+            .ObserveOn(Scheduler.MainThread)
             .Subscribe(
                 success =>
                 {
-                    var photo = ((DownloadHandlerTexture) www.downloadHandler).texture;
+                    var photo = !www.downloadHandler.isDone
+                        ? Global.Instance.errorImage.texture
+                        : ((DownloadHandlerTexture) www.downloadHandler).texture;
                     photos.Add(photo);
                     if (photos.Count >= perPage)
                         OnDownloadFinished?.Invoke(photos);
