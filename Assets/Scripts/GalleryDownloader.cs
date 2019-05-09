@@ -17,6 +17,10 @@ internal class GalleryDownloader : MonoBehaviour, IFlickrCallback
 
     public static event DownloadFinished OnDownloadFinished;
 
+    public delegate void DownloadFailed(Exception e);
+
+    public static event DownloadFailed OnDownloadFailed;
+
     private bool hasInvoked;
 
     private FlickrClient client;
@@ -32,7 +36,7 @@ internal class GalleryDownloader : MonoBehaviour, IFlickrCallback
 
     private void Update()
     {
-        if (photos.Count < perPage || hasInvoked) 
+        if (photos.Count < perPage || hasInvoked)
             return;
         hasInvoked = true;
         OnDownloadFinished?.Invoke(photos);
@@ -71,7 +75,7 @@ internal class GalleryDownloader : MonoBehaviour, IFlickrCallback
 
     public void OnFailure(Exception e)
     {
-        Debug.LogError(e);
+        OnDownloadFailed?.Invoke(e);
     }
 
     public void GetRecentPhotos(int pageNumber)
@@ -89,10 +93,7 @@ internal class GalleryDownloader : MonoBehaviour, IFlickrCallback
         var www = UnityWebRequestTexture.GetTexture(url);
         yield return www.SendWebRequest();
         if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.LogError(www.error);
-            Debug.LogError($"Exception occurred while downloading photo from {url}");
-        }
+            OnFailure(new Exception($"An exception occurred while downloading photo from {url}. {www.error}"));
         else
         {
             var photo = ((DownloadHandlerTexture) www.downloadHandler).texture;

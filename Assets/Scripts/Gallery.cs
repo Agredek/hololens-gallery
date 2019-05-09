@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 [RequireComponent(typeof(GalleryDownloader))]
 internal class Gallery : MonoBehaviour
 {
+    [SerializeField] private TextMeshPro exceptionText;
     [SerializeField] private GalleryDownloader downloader;
     [SerializeField] private GameObject contentContainer;
     [SerializeField] private Photo photoPrefab;
@@ -16,11 +19,13 @@ internal class Gallery : MonoBehaviour
     private void OnEnable()
     {
         GalleryDownloader.OnDownloadFinished += OnDownloadFinished;
+        GalleryDownloader.OnDownloadFailed += OnDownloadFailed;
     }
 
     private void OnDisable()
     {
         GalleryDownloader.OnDownloadFinished -= OnDownloadFinished;
+        GalleryDownloader.OnDownloadFailed -= OnDownloadFailed;
     }
 
     private void OnDownloadFinished(List<Texture2D> photos)
@@ -31,5 +36,11 @@ internal class Gallery : MonoBehaviour
             var photoInstance = Instantiate(photoPrefab, contentContainer.transform);
             photoInstance.SetPhoto(texture);
         }
+    }
+
+    private void OnDownloadFailed(Exception e)
+    {
+        Debug.LogError(e);
+        exceptionText.text = e.Message;
     }
 }

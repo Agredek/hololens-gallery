@@ -486,16 +486,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5994256310207309392, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0.0000015910749
-      objectReference: {fileID: 0}
-    - target: {fileID: 5994256310207309392, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5994081440107627814, guid: 854b552c0c5734e489cba63551b7bcb8,
         type: 3}
       propertyPath: m_AnchorMax.x
@@ -506,43 +496,7 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5994081440107627814, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5991346605101188190, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_CullTransparentMesh
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1865511171578003127, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1865511171578003127, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1865511171578003127, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1865511171578003127, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1865511171578003127, guid: 854b552c0c5734e489cba63551b7bcb8,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 4511968838154352178, guid: 854b552c0c5734e489cba63551b7bcb8, type: 3}
+    m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 854b552c0c5734e489cba63551b7bcb8, type: 3}
 --- !u!1 &1492314079
 GameObject:
