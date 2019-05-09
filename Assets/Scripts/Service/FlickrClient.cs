@@ -6,8 +6,8 @@ namespace Service
 {
     internal class FlickrClient
     {
-        private readonly IFlickrService service;
         private readonly IFlickrCallback callback;
+        private readonly IFlickrService service;
 
         internal FlickrClient(IFlickrCallback callback)
         {
@@ -30,22 +30,7 @@ namespace Service
                 .SubscribeOn(Scheduler.ThreadPool)
                 .ObserveOn(Scheduler.MainThread)
                 .Subscribe(
-                    data => callback.OnRecentSuccess(data),
-                    error => callback.OnFailure(error)
-                );
-        }
-
-        /// <summary>
-        ///     Download detailed info about one picture.
-        /// </summary>
-        /// <param name="photoId">ID of photo to download.</param>
-        internal void GetPhotoInfo(string photoId)
-        {
-            service.GetInfo(HttpConstants.PhotoInfo, photoId, HttpConstants.QueryOptions)
-                .SubscribeOn(Scheduler.ThreadPool)
-                .ObserveOn(Scheduler.MainThread)
-                .Subscribe(
-                    data => callback.OnInfoSuccess(data),
+                    data => callback.OnSuccess(data),
                     error => callback.OnFailure(error)
                 );
         }

@@ -4,9 +4,8 @@ namespace Service.Model
 {
     public class FlickrPhotoUrl
     {
-        [JsonProperty(PropertyName = "type")]
-        public string Type { get; set; }
-        
+        [JsonProperty(PropertyName = "type")] public string Type { get; set; }
+
         [JsonProperty(PropertyName = "_content")]
         public string Url { get; set; }
 

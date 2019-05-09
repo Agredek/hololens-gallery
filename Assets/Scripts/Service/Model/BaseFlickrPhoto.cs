@@ -11,7 +11,7 @@ namespace Service.Model
             Server = other.Server;
             Farm = other.Farm;
         }
-        
+
         protected BaseFlickrPhoto()
         {
         }
@@ -24,16 +24,14 @@ namespace Service.Model
             Farm = farm;
         }
 
-        [JsonProperty(PropertyName = "id")]
-        public string Id { get; set; }
-        
+        [JsonProperty(PropertyName = "id")] public string Id { get; set; }
+
         [JsonProperty(PropertyName = "secret")]
         public string Secret { get; set; }
-        
+
         [JsonProperty(PropertyName = "server")]
         public string Server { get; set; }
-        
-        [JsonProperty(PropertyName = "farm")]
-        public int Farm { get; set; }
+
+        [JsonProperty(PropertyName = "farm")] public int Farm { get; set; }
     }
 }

@@ -10,6 +10,7 @@ public class Photo : MonoBehaviour
 
     public void SetPhoto(Texture2D texture)
     {
+        transform.localScale *= 15;
         photo.sprite = texture.ToSprite();
     }
 }
