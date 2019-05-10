@@ -1,6 +1,6 @@
 namespace Constants
 {
-    public class Tooltips
+    public static class Tooltips
     {
         public const string PerPage = "Amount of photos should be downloaded per one page.";
 
@@ -13,5 +13,7 @@ namespace Constants
 
         public const string PhotoDisplayContainer =
             "GameObject containing SpriteRenderer Component that will be used as a container for the photo.";
+
+        public const string ContentGrid = "GameObject (part of the Gallery) containing GridLayoutGroup component in which photos will be stored.";
     }
 }

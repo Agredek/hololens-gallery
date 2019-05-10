@@ -40,20 +40,28 @@ internal class Gallery : MonoBehaviour
         GalleryDownloader.OnDownloadFailed += OnDownloadFailed;
     }
 
-    private void Awake()
+    private void Start()
     {
+        Initialize();
+        NextPage();
+    }
+
+    private void Initialize()
+    {
+        var globalPerPage = (int) Global.Instance.perPage;
+        if (globalPerPage == 0)
+            Debug.LogError("Global per page value is 0! Probably didn't pass Awake yet!");
+        else
+            perPage = globalPerPage;
+        
         downloader = new GalleryDownloader(perPage);
         photoObjects = new List<Photo>();
+
         for (var i = 0; i < perPage; ++i)
         {
             var photoInstance = Instantiate(photoPrefab, contentContainer.transform);
             photoObjects.Add(photoInstance);
         }
-    }
-
-    private void Start()
-    {
-        NextPage();
     }
 
     private void OnDisable()

@@ -4,14 +4,14 @@ using UnityEngine.UI;
 
 public class Global : MonoBehaviour
 {
-    [Tooltip(Tooltips.PhotoDisplay)]
-    public PhotoDisplay display;
+    [Tooltip(Tooltips.PhotoDisplay)] public PhotoDisplay display;
 
-    [Tooltip("")] public GridLayoutGroup contentGrid;
+    [Tooltip(Tooltips.ContentGrid)] public GridLayoutGroup contentGrid;
 
     public Sprite errorImage;
 
     private static Global instance;
+    public float perPage;
 
     public static Global Instance
     {
@@ -25,6 +25,7 @@ public class Global : MonoBehaviour
     private void Awake()
     {
         Initialize();
+        perPage = PlayerPrefs.GetFloat(SceneManagementConstants.PerPageKey, 10);
     }
 
     private static void Initialize()
