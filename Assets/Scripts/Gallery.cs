@@ -6,14 +6,10 @@ using UnityEngine;
 
 internal class Gallery : MonoBehaviour
 {
-    [SerializeField] private GameObject contentContainer;
-
     [SerializeField] private TextMeshPro exceptionText;
 
     [SerializeField] [Range(1, 10)] [Tooltip(Tooltips.PerPage)]
     private int perPage = 10;
-
-    [SerializeField] private Photo photoPrefab;
 
     [SerializeField] private List<Photo> photoObjects;
 
@@ -33,6 +29,15 @@ internal class Gallery : MonoBehaviour
         downloader.GetRecentPhotos(page--);
     }
 
+    public void UpdateWindow(int picturesAmount)
+    {
+        if (perPage == picturesAmount)
+            return;
+        perPage = picturesAmount;
+        downloader.PerPage = perPage;
+        NextPage();
+    }
+
     private void OnEnable()
     {
         GalleryDownloader.OnDownloadStarted += OnDownloadStarted;
@@ -42,26 +47,8 @@ internal class Gallery : MonoBehaviour
 
     private void Start()
     {
-        Initialize();
+        downloader = new GalleryDownloader {PerPage = perPage};
         NextPage();
-    }
-
-    private void Initialize()
-    {
-        var globalPerPage = (int) Global.Instance.perPage;
-        if (globalPerPage == 0)
-            Debug.LogError("Global per page value is 0! Probably didn't pass Awake yet!");
-        else
-            perPage = globalPerPage;
-        
-        downloader = new GalleryDownloader(perPage);
-        photoObjects = new List<Photo>();
-
-        for (var i = 0; i < perPage; ++i)
-        {
-            var photoInstance = Instantiate(photoPrefab, contentContainer.transform);
-            photoObjects.Add(photoInstance);
-        }
     }
 
     private void OnDisable()

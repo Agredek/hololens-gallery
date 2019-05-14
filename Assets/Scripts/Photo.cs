@@ -11,26 +11,26 @@ public class Photo : MonoBehaviour
 
     [SerializeField] private BoxCollider boxCollider;
 
-    private void Start()
-    {
-        var cellSize = Global.Instance.contentGrid.cellSize;
-        boxCollider.size = new Vector3(cellSize.x, cellSize.y, boxCollider.size.z);
-    }
-
     public void SetPhoto(Texture2D texture)
     {
         photo.sprite = texture.ToSprite();
         photo.preserveAspect = true;
-        photo.enabled = true;
+        photo.gameObject.SetActive(true);
     }
 
     public void Disable()
     {
-        photo.enabled = false;
+        photo.gameObject.SetActive(false);
     }
 
     public void Enlarge()
     {
         Global.Instance.display.Show(photo.sprite);
+    }
+
+    private void OnEnable()
+    {
+        var cellSize = Global.Instance.contentGrid.cellSize;
+        boxCollider.size = new Vector3(cellSize.x, cellSize.y, boxCollider.size.z);
     }
 }

@@ -16,15 +16,13 @@ internal class GalleryDownloader : IFlickrCallback
     public delegate void DownloadFinished(List<Texture2D> photos);
 
     private readonly FlickrClient client;
-
-    private readonly int perPage;
+    public int PerPage { get; set; }
     private readonly List<Texture2D> photos;
 
     private int pageCount;
 
-    public GalleryDownloader(int perPage)
+    public GalleryDownloader()
     {
-        this.perPage = perPage;
         photos = new List<Texture2D>();
         client = new FlickrClient(this);
     }
@@ -35,9 +33,9 @@ internal class GalleryDownloader : IFlickrCallback
         photos.Clear();
 
         var photoList = response.RecentFlickrPhotos.PhotoList;
-        foreach (var photo in photoList)
+        for (var i = 0; i < PerPage; ++i)
         {
-            var photoUrl = FlickrUtil.GetPhotoUrl(photo);
+            var photoUrl = FlickrUtil.GetPhotoUrl(photoList[i]);
             DownloadPhoto(photoUrl);
         }
     }
@@ -62,7 +60,7 @@ internal class GalleryDownloader : IFlickrCallback
         if (pageNumber > pageCount)
             return false;
         OnDownloadStarted?.Invoke();
-        client.GetRecentPhotos(perPage, pageNumber);
+        client.GetRecentPhotos(PerPage, pageNumber);
         return true;
     }
 
@@ -80,7 +78,7 @@ internal class GalleryDownloader : IFlickrCallback
                         ? Global.Instance.errorImage.texture
                         : ((DownloadHandlerTexture) www.downloadHandler).texture;
                     photos.Add(photo);
-                    if (photos.Count >= perPage)
+                    if (photos.Count >= PerPage)
                         OnDownloadFinished?.Invoke(photos);
                 },
                 failure =>
